@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ExtractionModule } from './extraction/extraction.module';
+import { AvalModule } from './aval/aval.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { ExtractionModule } from './extraction/extraction.module';
       envFilePath: '.env',
     }),
     ExtractionModule,
+    AvalModule,
   ],
   controllers: [AppController],
   providers: [AppService],
