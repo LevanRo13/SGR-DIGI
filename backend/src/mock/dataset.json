@@ -1,0 +1,17 @@
+[
+  {
+    "id": "DOC-001",
+    "nombre": "Factura Comercial - Aceros del Sur S.A.",
+    "textoSimulado": "FACTURA COMERCIAL\nEmpresa: Aceros del Sur S.A.\nCUIT: 30-71234567-8\nFecha de emisión: 15/03/2026\nDescripción: Venta de 500 toneladas de acero laminado en caliente, calidad SAE 1010.\nCantidad: 500 toneladas\nPrecio unitario: USD 620 por tonelada\nValor total: USD 310.000\nCondición de pago: 90 días fecha factura\nDestino: Planta industrial Córdoba\nObservaciones: Material certificado bajo norma IRAM-IAS U 500-503. Entrega programada en 3 lotes mensuales. Cliente con historial de pagos regular, sin incidentes reportados en últimos 12 meses."
+  },
+  {
+    "id": "DOC-002",
+    "nombre": "Certificado de Depósito - Warrant Agrícola",
+    "textoSimulado": "CERTIFICADO DE DEPÓSITO - WARRANT\nAlmacén: Depósitos Rurales del Litoral S.A.\nHabilitación SENASA: N° 04-123-45678\nProducto: Soja - Campaña 2025/2026\nCalidad: Grado 2, conforme norma XII de la Bolsa de Cereales\nCantidad: 1.200 toneladas\nValor de mercado estimado: USD 440 por tonelada\nValor total estimado: USD 528.000\nFecha de depósito: 02/02/2026\nVencimiento del warrant: 02/08/2026\nUbicación: Planta Rosario, Santa Fe\nObservaciones: Mercadería asegurada con póliza todo riesgo. Certificación de calidad adjunta. Producto sin restricciones de exportación vigentes."
+  },
+  {
+    "id": "DOC-003",
+    "nombre": "Pagaré Comercial - Industrias Metalúrgicas Norte",
+    "textoSimulado": "PAGARÉ COMERCIAL\nLibrador: Industrias Metalúrgicas Norte S.R.L.\nCUIT: 30-65432198-7\nBeneficiario: Distribuidora General de Insumos S.A.\nLugar de emisión: San Miguel de Tucumán\nFecha de emisión: 01/03/2026\nFecha de vencimiento: 01/06/2026\nMonto: ARS 45.000.000 (pesos cuarenta y cinco millones)\nValor equivalente USD: USD 38.135 (tipo de cambio referencia BNA: 1.180)\nCantidad de cuotas: 1 (pago único al vencimiento)\nGarantía: Sin garantía real adjunta\nObservaciones: Librador con antecedentes en clearing bancario. Se registra 1 cheque rechazado en últimos 24 meses por insuficiencia de fondos. Ratio de endeudamiento elevado según último balance presentado."
+  }
+]
