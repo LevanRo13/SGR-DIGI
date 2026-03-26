@@ -1,7 +1,7 @@
 ﻿# HU-02 - Extraer datos con IA
 
 ## Seguimiento
-- Estado: To Do
+- Estado: Done
 - Responsable operativo: Backend
 
 ## Epica
@@ -35,8 +35,8 @@ Tareas:
 - Arquitectura relevante: Backend NestJS, Frontend React, persistencia local en JSON, QR hacia explorer.
 - Restricciones clave: sin OCR real, sin Soroban completo, sin scoring dinamico de IA en esta etapa.
 ## Checklist QA
-- [ ] Prueba manual ejecutada (UI o Postman).
-- [ ] Criterios de aceptacion validados uno por uno.
-- [ ] Caso de error relevante probado y documentado.
-- [ ] Integracion en flujo end-to-end verificada.
+- [x] Prueba manual ejecutada (UI o Postman).
+- [x] Criterios de aceptacion validados uno por uno.
+- [x] Caso de error relevante probado y documentado.
+- [x] Integracion en flujo end-to-end verificada.
 
