@@ -1,0 +1,28 @@
+[
+  {
+    "id": "OP-20260326-001",
+    "tipo": "FACTURA",
+    "cantidad": 500,
+    "valor": 310000,
+    "aval": 465000,
+    "estado": "confirmed",
+    "timestamp": "2026-03-26T23:22:38.619Z",
+    "memoText": "AURA-5D986D48",
+    "network": "Stellar Testnet",
+    "txHash": "41a9416514d9df2ed6f589b2368d13d6ee1bbe42c55ff37f85213ca1be532a85",
+    "explorerUrl": "https://stellar.expert/explorer/testnet/tx/41a9416514d9df2ed6f589b2368d13d6ee1bbe42c55ff37f85213ca1be532a85"
+  },
+  {
+    "id": "OP-20260326-002",
+    "tipo": "WARRANT",
+    "cantidad": 1000,
+    "valor": 500000,
+    "aval": 750000,
+    "estado": "confirmed",
+    "timestamp": "2026-03-26T23:28:01.200Z",
+    "memoText": "AURA-F96D35E3",
+    "network": "Stellar Testnet",
+    "txHash": "6d717b3f4b785c284f49a87228bd4a8ff1651315835e177495bb2eeecdd8d3a4",
+    "explorerUrl": "https://stellar.expert/explorer/testnet/tx/6d717b3f4b785c284f49a87228bd4a8ff1651315835e177495bb2eeecdd8d3a4"
+  }
+]
