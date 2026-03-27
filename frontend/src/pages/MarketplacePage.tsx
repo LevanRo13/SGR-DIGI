@@ -37,7 +37,7 @@ export default function MarketplacePage() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch('http://127.0.0.1:3000/guarantee');
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'}/guarantee`);
       const data = await res.json();
       if (data.success) {
         setGuarantees(data.data);
@@ -55,7 +55,7 @@ export default function MarketplacePage() {
     if (!selectedGuarantee) return;
     try {
       setLoading(true);
-      const res = await fetch(`http://127.0.0.1:3000/marketplace/offers/${selectedGuarantee}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'}/marketplace/offers/${selectedGuarantee}`);
       const data = await res.json();
       if (data.success) {
         setOffers(data.data);
@@ -94,7 +94,7 @@ export default function MarketplacePage() {
         pricePerToken: Number(offerPrice)
       };
       
-      const res = await fetch('http://127.0.0.1:3000/marketplace/offer', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'}/marketplace/offer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -123,7 +123,7 @@ export default function MarketplacePage() {
         amount: Number(buyAmount)
       };
       
-      const res = await fetch('http://127.0.0.1:3000/marketplace/buy', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'}/marketplace/buy`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

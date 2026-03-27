@@ -138,7 +138,7 @@ export default function UploadPage() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://127.0.0.1:3000/extract/upload', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'}/extract/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -212,7 +212,7 @@ export default function UploadPage() {
     data: GuaranteeData
   ): Promise<EmissionResult> => {
     try {
-      const response = await fetch('http://127.0.0.1:3000/guarantee', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'}/guarantee`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
