@@ -32,12 +32,15 @@ REGLAS ESTRICTAS:
 export class LlmService {
   private readonly logger = new Logger(LlmService.name);
   private genAI: GoogleGenerativeAI | null = null;
+  private modelName: string;
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('GEMINI_API_KEY');
+    this.modelName = this.configService.get<string>('GEMINI_MODEL') || 'gemini-2.0-flash';
+
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey);
-      this.logger.log('Gemini AI inicializado correctamente');
+      this.logger.log(`Gemini AI inicializado con modelo: ${this.modelName}`);
     } else {
       this.logger.warn(
         'GEMINI_API_KEY no configurada. El servicio LLM operará en modo fallback.',
@@ -53,7 +56,7 @@ export class LlmService {
 
     try {
       const model = this.genAI.getGenerativeModel({
-        model: 'gemini-2.0-flash',
+        model: this.modelName,
       });
 
       const result = await model.generateContent([
