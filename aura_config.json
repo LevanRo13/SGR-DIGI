@@ -1,0 +1,15 @@
+{
+  "index": 0,
+  "decimals": 7,
+  "c_factor": 7000000,
+  "l_factor": 0,
+  "util": 9000000,
+  "max_util": 9800000,
+  "r_base": 50000,
+  "r_one": 500000,
+  "r_two": 1000000,
+  "r_three": 10000000,
+  "reactivity": 1000,
+  "enabled": true,
+  "supply_cap": "170141183460469231731687303715884105727"
+}

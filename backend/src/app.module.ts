@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ExtractionModule } from './extraction/extraction.module';
 import { StellarModule } from './stellar/stellar.module';
+import { LendingModule } from './lending/lending.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { StellarModule } from './stellar/stellar.module';
     }),
     ExtractionModule,
     StellarModule,
+    LendingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
