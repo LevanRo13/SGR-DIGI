@@ -8,12 +8,12 @@ export default function CompaniesPage() {
         <div className="rounded-3xl bg-slate-100 p-6 mb-6">
           <Building2 className="w-12 h-12 text-slate-400" />
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight mb-2">Companies</h1>
+        <h1 className="text-2xl font-semibold tracking-tight mb-2">Empresas</h1>
         <p className="text-slate-500 text-center max-w-md">
-          Manage company profiles and their guarantee history. This feature is planned for a future release.
+          Gestioná perfiles de empresas y su historial de garantías. Esta funcionalidad está planificada para una versión futura.
         </p>
         <div className="mt-6 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">
-          Future release
+          Versión futura
         </div>
       </div>
     </Layout>

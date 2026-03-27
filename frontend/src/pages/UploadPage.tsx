@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import {
   Upload,
   FileCheck2,
@@ -13,6 +13,7 @@ import DataCorrectionForm from '../components/DataCorrectionForm';
 import type { ExtractedData } from '../components/DataCorrectionForm';
 import EmissionConfirmationModal from '../components/EmissionConfirmationModal';
 import type { GuaranteeData, EmissionResult } from '../types/guarantee';
+import { useGuarantee } from '../context/GuaranteeContext';
 
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
 
@@ -30,14 +31,32 @@ function formatFileSize(bytes: number): string {
 }
 
 export default function UploadPage() {
-  const [file, setFile] = useState<File | null>(null);
+  const {
+    uploadProgress,
+    setUploadProgress,
+    resetUploadProgress,
+    addCompletedGuarantee,
+    addDynamicProcess,
+  } = useGuarantee();
+
+  // Restore persisted state from context
+  const [file, setFile] = useState<File | null>(uploadProgress.file);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [extractedData, setExtractedData] = useState<ExtractedData | null>(null);
+  const [extractedData, setExtractedData] = useState<ExtractedData | null>(uploadProgress.extractedData);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<string | null>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Persist state to context when it changes
+  useEffect(() => {
+    setUploadProgress({
+      file,
+      extractedData,
+      step: extractedData ? 'correction' : 'upload',
+    });
+  }, [file, extractedData, setUploadProgress]);
 
   const validateAndSetFile = useCallback((incoming: File) => {
     setError(null);
@@ -105,8 +124,9 @@ export default function UploadPage() {
     setError(null);
     setExtractedData(null);
     setProcessingError(null);
+    resetUploadProgress();
     if (inputRef.current) inputRef.current.value = '';
-  }, []);
+  }, [resetUploadProgress]);
 
   const handleContinue = async () => {
     if (!file) return;
@@ -115,29 +135,36 @@ export default function UploadPage() {
     setProcessingError(null);
 
     try {
-      // TODO: Cambiar 'http://localhost:8000' por tu URL del backend real
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:3000/extract/upload', {
+      const response = await fetch('http://127.0.0.1:3000/extract/upload', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error(`Backend error: ${response.statusText}`);
+        throw new Error(`Error del servidor: ${response.statusText}`);
       }
 
       const data = await response.json();
-
-      // data debería tener estructura como:
-      // { extracted_data: { field1: value1, field2: value2, ... } }
       const extractedFields = data.extracted_data || data;
       setExtractedData(extractedFields);
+
+      // Add a dynamic process to the dashboard when extraction completes
+      const extractedAmount = Number(extractedFields?.valor || extractedFields?.value || extractedFields?.amount || 150000);
+      addDynamicProcess({
+        id: `proc-dyn-upload-${Date.now()}`,
+        company: String(extractedFields?.empresa || extractedFields?.company || 'Sigil'),
+        amount: `$${extractedAmount.toLocaleString()}`,
+        state: 'Procesamiento IA',
+        date: `Hoy · ${new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}`,
+        progress: 40,
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error al procesar el archivo';
       setProcessingError(message);
-      console.error('Processing error:', err);
+      console.error('Error de procesamiento:', err);
     } finally {
       setIsProcessing(false);
     }
@@ -146,17 +173,16 @@ export default function UploadPage() {
   // Construir datos de garantía a partir de los datos extraídos
   const getGuaranteeData = (): GuaranteeData => {
     const tipo = String(extractedData?.tipo || extractedData?.type || 'OTRO');
-    const valor = Number(extractedData?.valor || extractedData?.value || extractedData?.amount || 0);
-    const cantidad = Number(extractedData?.cantidad || extractedData?.quantity || 1);
+    const valor = Number(extractedData?.valor || extractedData?.value || extractedData?.amount || 150000);
 
-    const baseValue = valor || 100000;
-    const riskFactor = tipo === 'WARRANT' ? 0.8 : tipo === 'PAGARE' ? 1.2 : 1.0;
-    const multiplier = 1.5;
+    const baseValue = valor || 150000;
+    const riskFactor = 1.1;
+    const multiplier = 1.05;
     const finalAval = Math.round(baseValue * riskFactor * multiplier);
 
     return {
       company: {
-        businessName: String(extractedData?.empresa || extractedData?.company || 'Sin datos'),
+        businessName: String(extractedData?.empresa || extractedData?.company || 'Sigil'),
         cuit: String(extractedData?.cuit || extractedData?.dni || 'Sin datos'),
         activity: String(extractedData?.actividad || extractedData?.activity || ''),
       },
@@ -186,7 +212,7 @@ export default function UploadPage() {
     data: GuaranteeData
   ): Promise<EmissionResult> => {
     try {
-      const response = await fetch('http://localhost:3000/guarantee', {
+      const response = await fetch('http://127.0.0.1:3000/guarantee', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -208,6 +234,19 @@ export default function UploadPage() {
           error: result.error || result.message || 'Error al emitir la garantía en Stellar',
         };
       }
+
+      // Register the completed guarantee in global context for the Dashboard
+      addCompletedGuarantee({
+        id: result.data.txHash || `g-${Date.now()}`,
+        company: data.company.businessName,
+        documentType: data.document.type,
+        amount: data.document.amount,
+        avalAmount: data.calculation.finalAval,
+        txHash: result.data.txHash,
+        explorerUrl: result.data.explorerUrl,
+        timestamp: new Date(),
+        fileName: file?.name || 'documento',
+      });
 
       return {
         success: true,
@@ -233,6 +272,16 @@ export default function UploadPage() {
     setProcessingError(null);
   };
 
+  // Full reset of the upload page after successful emission
+  const handleSuccessReset = () => {
+    setFile(null);
+    setExtractedData(null);
+    setError(null);
+    setProcessingError(null);
+    resetUploadProgress();
+    if (inputRef.current) inputRef.current.value = '';
+  };
+
   return (
     <Layout>
       {/* Modal de confirmación (HU-06) */}
@@ -241,6 +290,7 @@ export default function UploadPage() {
         onClose={() => setShowConfirmationModal(false)}
         data={getGuaranteeData()}
         onConfirm={handleConfirmEmission}
+        onSuccessReset={handleSuccessReset}
       />
 
       <div className="max-w-2xl">
@@ -254,10 +304,10 @@ export default function UploadPage() {
               </span>
               <div>
                 <p className="text-sm font-medium text-slate-900">
-                  Verificar datos extraídos
+                  Verificar documentos de exportación
                 </p>
                 <p className="text-xs text-slate-500">
-                  Revise y corrija los datos extraídos del documento
+                  Revise los datos extraídos y confirme para registrar su garantía y generar el adelanto digital
                 </p>
               </div>
             </div>
@@ -292,18 +342,31 @@ export default function UploadPage() {
         ) : (
           <>
             {/* Step indicator para paso 1 */}
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-4">
               <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 text-blue-600 text-xs font-bold ring-1 ring-blue-200">
                 1
               </span>
               <div>
                 <p className="text-sm font-medium text-slate-900">
-                  Cargar documento de respaldo
+                  Cargar documentación de exportación
                 </p>
                 <p className="text-xs text-slate-500">
-                  Suba el comprobante para iniciar la solicitud de aval
+                  Suba los documentos que respaldan su garantía vigente
                 </p>
               </div>
+            </div>
+
+            {/* Info banner */}
+            <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/60 px-4 py-3">
+              <p className="text-xs font-medium text-blue-800 mb-1">¿Cómo funciona?</p>
+              <p className="text-xs text-blue-700 leading-relaxed">
+                Usted ya cuenta con un aval otorgado por la SGR. Aquí debe cargar la documentación 
+                de exportación que lo respalda (certificado de garantía, pagaré, warrant, factura de exportación, etc.) 
+                para que el sistema confirme los datos, registre la evidencia en blockchain y genere su adelanto digital tokenizado.
+              </p>
+              <p className="text-xs text-blue-600 mt-1.5 font-medium">
+                📄 Puede cargar un documento por vez. Si necesita adjuntar más documentación, repita el proceso para cada archivo.
+              </p>
             </div>
 
             {/* Upload card */}

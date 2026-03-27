@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { ShoppingBag, Tag, Coins, ArrowRight, Loader2, RefreshCcw } from 'lucide-react';
 import Layout from '../components/Layout';
 
-// Tipos base (luego se pueden mover a types/index.ts)
+// Tipos base
 interface Guarantee {
-  id: string;          // String ID (e.g., "OP-2026...")
-  guaranteeId: number; // Numeric ID for Soroban
+  id: string;
+  guaranteeId: number;
   tipo: string;
   estado: string;
   txHash: string;
@@ -31,13 +31,13 @@ export default function MarketplacePage() {
   const [isCreatingOffer, setIsCreatingOffer] = useState(false);
 
   const [buyAmount, setBuyAmount] = useState('100');
-  const [isBuying, setIsBuying] = useState<string | null>(null); // offerId en progreso
+  const [isBuying, setIsBuying] = useState<string | null>(null);
 
   const fetchGuarantees = async () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch('http://localhost:3000/guarantee');
+      const res = await fetch('http://127.0.0.1:3000/guarantee');
       const data = await res.json();
       if (data.success) {
         setGuarantees(data.data);
@@ -52,17 +52,14 @@ export default function MarketplacePage() {
   };
 
   const fetchOffers = async () => {
-    // Por simplicidad, buscamos ofertas de la garantía seleccionada
-    // Opcionalmente, iteramos sobre todas las garantías si queremos mostrar "Todas"
     if (!selectedGuarantee) return;
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:3000/marketplace/offers/${selectedGuarantee}`);
+      const res = await fetch(`http://127.0.0.1:3000/marketplace/offers/${selectedGuarantee}`);
       const data = await res.json();
       if (data.success) {
         setOffers(data.data);
       } else {
-        // setError(data.error);
         setOffers([]);
       }
     } catch (err: any) {
@@ -97,7 +94,7 @@ export default function MarketplacePage() {
         pricePerToken: Number(offerPrice)
       };
       
-      const res = await fetch('http://localhost:3000/marketplace/offer', {
+      const res = await fetch('http://127.0.0.1:3000/marketplace/offer', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -126,7 +123,7 @@ export default function MarketplacePage() {
         amount: Number(buyAmount)
       };
       
-      const res = await fetch('http://localhost:3000/marketplace/buy', {
+      const res = await fetch('http://127.0.0.1:3000/marketplace/buy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -150,9 +147,9 @@ export default function MarketplacePage() {
     <Layout>
       <div className="flex flex-col gap-6 p-2 max-w-6xl mx-auto">
         <header className="mb-4">
-          <h1 className="text-2xl font-semibold tracking-tight">DeFi Marketplace</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Marketplace DeFi</h1>
           <p className="text-slate-500 mt-1">
-            Create sell offers and buy tokenized guarantees on the Stellar Testnet.
+            Creá ofertas de venta y comprá garantías tokenizadas en Stellar Testnet.
           </p>
         </header>
 
@@ -170,23 +167,23 @@ export default function MarketplacePage() {
                 <Tag className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-medium">Create Sell Offer</h2>
-                <p className="text-sm text-slate-500">Sell fragments of your active guarantee</p>
+                <h2 className="text-lg font-medium">Crear oferta de venta</h2>
+                <p className="text-sm text-slate-500">Vendé fracciones de tu garantía activa</p>
               </div>
             </div>
 
             <form onSubmit={handleCreateOffer} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-medium text-slate-700">Select Guarantee</label>
+                <label className="text-sm font-medium text-slate-700">Seleccionar garantía</label>
                 <select 
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
                   value={selectedGuarantee}
                   onChange={(e) => setSelectedGuarantee(e.target.value)}
                   disabled={loading && guarantees.length === 0}
                 >
-                  <option value="">-- Select a Guarantee ID --</option>
+                  <option value="">-- Seleccionar ID de Garantía --</option>
                   {guarantees
-                    .filter(g => g.guaranteeId !== undefined) // Only show Soroban initialized operations
+                    .filter(g => g.guaranteeId !== undefined)
                     .map(g => (
                     <option key={g.id} value={g.guaranteeId}>
                       ID: {g.guaranteeId} - {g.tipo} ({g.estado})
@@ -195,21 +192,21 @@ export default function MarketplacePage() {
                 </select>
                 <div className="flex items-center justify-between mt-1 px-1">
                   <span className="text-xs text-slate-500">
-                    Showing only testnet guarantees.
+                    Mostrando solo garantías en testnet.
                   </span>
                   <button 
                     type="button" 
                     onClick={fetchGuarantees} 
                     className="text-blue-600 hover:text-blue-700 text-xs font-medium flex items-center gap-1"
                   >
-                    <RefreshCcw className="w-3 h-3" /> Refresh
+                    <RefreshCcw className="w-3 h-3" /> Actualizar
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">Amount to sell</label>
+                  <label className="text-sm font-medium text-slate-700">Cantidad a vender</label>
                   <input
                     type="number"
                     min="1"
@@ -219,7 +216,7 @@ export default function MarketplacePage() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-sm font-medium text-slate-700">Price (XLM)</label>
+                  <label className="text-sm font-medium text-slate-700">Precio (XLM)</label>
                   <input
                     type="number"
                     min="0.1"
@@ -241,7 +238,7 @@ export default function MarketplacePage() {
                 }`}
               >
                 {isCreatingOffer ? <Loader2 className="w-4 h-4 animate-spin" /> : <Tag className="w-4 h-4" />}
-                {isCreatingOffer ? 'Creating offer on-chain...' : 'Publish Offer'}
+                {isCreatingOffer ? 'Creando oferta on-chain...' : 'Publicar oferta'}
               </button>
             </form>
           </section>
@@ -253,11 +250,11 @@ export default function MarketplacePage() {
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-lg font-medium">Active Offers</h2>
+                <h2 className="text-lg font-medium">Ofertas activas</h2>
                 <p className="text-sm text-slate-500">
                   {selectedGuarantee 
-                    ? `Offers for Guarantee #${selectedGuarantee}`
-                    : 'Select a guarantee to view offers'}
+                    ? `Ofertas para Garantía #${selectedGuarantee}`
+                    : 'Seleccioná una garantía para ver ofertas'}
                 </p>
               </div>
             </div>
@@ -273,14 +270,14 @@ export default function MarketplacePage() {
                     <div key={offer.offerId} className="border border-slate-100 bg-slate-50 rounded-xl p-4 flex flex-col gap-4">
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Offer #{offer.offerId}</span>
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Oferta #{offer.offerId}</span>
                           <div className="flex items-baseline gap-1 mt-1">
                             <span className="text-xl font-semibold text-slate-900">{Number(offer.amount) / 10000000}</span>
-                            <span className="text-sm font-medium text-slate-500">fractions</span>
+                            <span className="text-sm font-medium text-slate-500">fracciones</span>
                           </div>
                         </div>
                         <div className="text-right">
-                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Price</span>
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Precio</span>
                           <div className="flex items-center gap-1 mt-1 justify-end text-blue-600">
                             <Coins className="w-4 h-4" />
                             <span className="text-lg font-semibold">{Number(offer.price) / 10000000} XLM</span>
@@ -292,7 +289,7 @@ export default function MarketplacePage() {
                         <input
                           type="number"
                           min="1"
-                          placeholder="Amount"
+                          placeholder="Cantidad"
                           className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-emerald-500"
                           value={buyAmount}
                           onChange={(e) => setBuyAmount(e.target.value)}
@@ -302,7 +299,7 @@ export default function MarketplacePage() {
                           disabled={isBuying === offer.offerId}
                           className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4 py-2 flex items-center gap-2 text-sm font-medium transition"
                         >
-                          {isBuying === offer.offerId ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buy'}
+                          {isBuying === offer.offerId ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Comprar'}
                           {!isBuying && <ArrowRight className="w-4 h-4" />}
                         </button>
                       </div>
@@ -312,7 +309,7 @@ export default function MarketplacePage() {
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-slate-400">
                   <ShoppingBag className="w-10 h-10 mb-3 opacity-20" />
-                  <p className="text-sm">No active offers found</p>
+                  <p className="text-sm">No se encontraron ofertas activas</p>
                 </div>
               )}
             </div>

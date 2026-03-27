@@ -16,6 +16,7 @@ interface EmissionConfirmationModalProps {
   onClose: () => void;
   data: GuaranteeData;
   onConfirm: (data: GuaranteeData) => Promise<EmissionResult>;
+  onSuccessReset?: () => void;
 }
 
 export default function EmissionConfirmationModal({
@@ -23,6 +24,7 @@ export default function EmissionConfirmationModal({
   onClose,
   data,
   onConfirm,
+  onSuccessReset,
 }: EmissionConfirmationModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<EmissionResult | null>(null);
@@ -37,7 +39,9 @@ export default function EmissionConfirmationModal({
         setTimeout(() => {
           onClose();
           setResult(null);
-        }, 3000);
+          // Reset the upload page so user can upload a new document
+          onSuccessReset?.();
+        }, 3500);
       }
     } catch (error) {
       setResult({
@@ -78,10 +82,10 @@ export default function EmissionConfirmationModal({
             <CheckCircle2 className="w-8 h-8" />
           </div>
           <h3 className="text-xl font-semibold text-slate-900 mb-2">
-            Aval emitido correctamente
+            Documentos de exportación registrados correctamente
           </h3>
           <p className="text-sm text-slate-600 mb-4">
-            El aval ha sido registrado en Stellar blockchain
+            La garantía ha sido confirmada y registrada en Stellar blockchain
           </p>
           {result.transactionId && (
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 mb-4">
@@ -110,7 +114,7 @@ export default function EmissionConfirmationModal({
     <Modal
       isOpen={isOpen}
       onClose={handleCancel}
-      title="Confirmar Emisión de Aval"
+      title="Confirmar Carga de Documentos de Exportación"
       size="lg"
       showCloseButton={!isSubmitting}
     >
@@ -184,7 +188,7 @@ export default function EmissionConfirmationModal({
           <div className="flex items-center gap-2 mb-3">
             <Calculator className="w-5 h-5 text-blue-600" />
             <h3 className="text-sm font-semibold text-slate-900">
-              Cálculo del Aval
+              Cálculo del Adelanto
             </h3>
           </div>
           <div className="space-y-2 text-sm">
@@ -209,7 +213,7 @@ export default function EmissionConfirmationModal({
             <div className="border-t border-slate-200 pt-2 mt-2">
               <div className="flex justify-between items-center">
                 <span className="text-base font-semibold text-slate-900">
-                  Aval Final
+                  Adelanto Final
                 </span>
                 <span className="text-xl font-bold text-blue-600">
                   {formatCurrency(data.calculation.finalAval)}
@@ -251,7 +255,7 @@ export default function EmissionConfirmationModal({
               Acción irreversible
             </p>
             <p className="text-xs text-amber-700 mt-1">
-              Una vez confirmada, la emisión será registrada en blockchain y no
+              Una vez confirmada, la carga será registrada en blockchain y no
               podrá ser modificada ni eliminada.
             </p>
           </div>
@@ -292,7 +296,7 @@ export default function EmissionConfirmationModal({
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4" />
-                Confirmar Emisión
+                Confirmar Carga
               </>
             )}
           </button>

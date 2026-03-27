@@ -15,9 +15,9 @@ export function ActivityLog({ entries }: ActivityLogProps) {
   return (
     <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-4">
-        <h2 className="text-lg font-semibold tracking-tight">Blockchain activity log</h2>
+        <h2 className="text-lg font-semibold tracking-tight">Registro de actividad blockchain</h2>
         <p className="text-sm text-slate-500">
-          Transparent operational history with verifiable evidence.
+          Historial operacional transparente con evidencia verificable.
         </p>
       </div>
       <div className="space-y-3">

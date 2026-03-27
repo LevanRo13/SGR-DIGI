@@ -11,7 +11,7 @@ export default function Header() {
           </div>
           <div>
             <div className="font-semibold tracking-tight">SGR DIGI</div>
-            <div className="text-xs text-slate-500">Technical validation MVP</div>
+            <div className="text-xs text-slate-500">MVP validación técnica</div>
           </div>
         </div>
 
@@ -21,7 +21,7 @@ export default function Header() {
             <input
               type="text"
               className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm outline-none ring-0 placeholder:text-slate-400 focus:border-blue-300 focus:bg-white"
-              placeholder="Search company, certificate hash, or process ID"
+              placeholder="Buscar empresa, hash de certificado o ID de proceso"
             />
           </div>
         </div>
@@ -29,13 +29,13 @@ export default function Header() {
         {/* Right side */}
         <div className="flex items-center gap-3">
           <div className="hidden rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 sm:block">
-            Testnet connected
+            Testnet conectada
           </div>
           <Link
             to="/guarantee"
             className="rounded-2xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700"
           >
-            New Guarantee
+            Nueva Garantía
           </Link>
           {/* Avatar placeholder */}
           <div className="h-10 w-10 rounded-full bg-slate-200" />

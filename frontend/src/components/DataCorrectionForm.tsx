@@ -138,13 +138,13 @@ export default function DataCorrectionForm({
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-slate-900 mb-2">
-          Verificar datos extraídos
+          Verificar documentos de exportación
         </h2>
         <p className="text-slate-600">
           Documento: <span className="font-medium">{fileName}</span>
         </p>
         <p className="text-xs text-slate-500 mt-1">
-          Por favor revise y corrija los datos extraídos del documento
+          Revise los datos extraídos de su documentación. Al confirmar, se registrará la garantía y se generará su adelanto digital.
         </p>
       </div>
 
@@ -163,7 +163,7 @@ export default function DataCorrectionForm({
             >
               <h3 className="text-sm font-semibold text-slate-900 capitalize">
                 {section === 'personal' && '👤 Datos Personales'}
-                {section === 'guarantee' && '🛡️ Información de Aval'}
+                {section === 'guarantee' && '📦 Documentos de Exportación'}
                 {section === 'financial' && '💰 Datos Financieros'}
                 {section === 'other' && '📋 Otros'}
               </h3>
@@ -225,7 +225,7 @@ export default function DataCorrectionForm({
           ) : (
             <>
               <Check className="w-4 h-4" />
-              Confirmar datos
+              Confirmar y emitir adelanto
             </>
           )}
         </button>

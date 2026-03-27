@@ -12,16 +12,16 @@ export function ProcessTable({ processes, onViewAll, onViewProcess }: ProcessTab
     <section className="rounded-[28px] border border-slate-200 bg-white shadow-sm">
       <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight">Processes in progress</h2>
+          <h2 className="text-lg font-semibold tracking-tight">Procesos en curso</h2>
           <p className="text-sm text-slate-500">
-            Current workflows across upload, validation, and blockchain registration.
+            Flujos actuales de carga, validación y registro en blockchain.
           </p>
         </div>
         <button
           onClick={onViewAll}
           className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
         >
-          View all
+          Ver todos
         </button>
       </div>
 
@@ -29,12 +29,12 @@ export function ProcessTable({ processes, onViewAll, onViewProcess }: ProcessTab
         <table className="min-w-full divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-6 py-3 text-left font-medium text-slate-500">Company</th>
-              <th className="px-6 py-3 text-left font-medium text-slate-500">Amount</th>
-              <th className="px-6 py-3 text-left font-medium text-slate-500">Status</th>
-              <th className="px-6 py-3 text-left font-medium text-slate-500">Date</th>
-              <th className="px-6 py-3 text-left font-medium text-slate-500">Progress</th>
-              <th className="px-6 py-3 text-right font-medium text-slate-500">Action</th>
+              <th className="px-6 py-3 text-left font-medium text-slate-500">Empresa</th>
+              <th className="px-6 py-3 text-left font-medium text-slate-500">Monto</th>
+              <th className="px-6 py-3 text-left font-medium text-slate-500">Estado</th>
+              <th className="px-6 py-3 text-left font-medium text-slate-500">Fecha</th>
+              <th className="px-6 py-3 text-left font-medium text-slate-500">Progreso</th>
+              <th className="px-6 py-3 text-right font-medium text-slate-500">Acción</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200 bg-white">
@@ -59,7 +59,7 @@ export function ProcessTable({ processes, onViewAll, onViewProcess }: ProcessTab
                     onClick={() => onViewProcess?.(row.id)}
                     className="rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
                   >
-                    View
+                    Ver
                   </button>
                 </td>
               </tr>

@@ -12,15 +12,15 @@ export function CertificateCard({ certificate, onViewCertificate, onViewOnChain 
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="text-base font-semibold">{certificate.company}</div>
-          <div className="mt-1 text-sm text-slate-500">Issued {certificate.issuedAt}</div>
+          <div className="mt-1 text-sm text-slate-500">Emitido {certificate.issuedAt}</div>
         </div>
         <div className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
-          Issued
+          Emitido
         </div>
       </div>
       <div className="mt-5 grid gap-3 text-sm">
         <div className="flex items-center justify-between">
-          <span className="text-slate-500">Guarantee amount</span>
+          <span className="text-slate-500">Monto del adelanto</span>
           <span className="font-medium">{certificate.amount}</span>
         </div>
         <div className="flex items-center justify-between">
@@ -28,7 +28,7 @@ export function CertificateCard({ certificate, onViewCertificate, onViewOnChain 
           <span className="font-mono text-xs text-slate-700">{certificate.hash}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-slate-500">Network</span>
+          <span className="text-slate-500">Red</span>
           <span className="font-medium">{certificate.network}</span>
         </div>
       </div>
@@ -37,13 +37,13 @@ export function CertificateCard({ certificate, onViewCertificate, onViewOnChain 
           onClick={onViewCertificate}
           className="flex-1 rounded-2xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-white"
         >
-          View certificate
+          Ver certificado
         </button>
         <button
           onClick={onViewOnChain}
           className="flex-1 rounded-2xl bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700"
         >
-          View on-chain
+          Ver on-chain
         </button>
       </div>
     </div>

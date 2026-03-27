@@ -2,15 +2,13 @@ import { useLocation, Link } from 'react-router-dom';
 import { NAVIGATION_ITEMS } from '../../constants/styles';
 
 const ROUTE_MAP: Record<string, string> = {
-  'Dashboard': '/dashboard',
-  'New Guarantee': '/guarantee',
-  'Processes': '/processes',
-  'Certificates': '/certificates',
-  'Marketplace': '/marketplace',
-  'Blend Protocol': '/lending',
-  'Blockchain Explorer': '/explorer',
-  'Companies': '/companies',
-  'Settings': '/settings',
+  'Panel Principal': '/dashboard',
+  'Nueva Garantía': '/guarantee',
+  'Procesos': '/processes',
+  'Certificados': '/certificates',
+  'Explorador Blockchain': '/explorer',
+  'Empresas': '/companies',
+  'Configuración': '/settings',
 };
 
 export default function Sidebar() {
@@ -26,7 +24,7 @@ export default function Sidebar() {
           </div>
           <div>
             <div className="text-lg font-semibold tracking-tight">SGR DIGI</div>
-            <div className="text-sm text-slate-500">AI + blockchain guarantees</div>
+            <div className="text-sm text-slate-500">IA + garantías blockchain</div>
           </div>
         </div>
       </div>
@@ -57,10 +55,10 @@ export default function Sidebar() {
       {/* Network Status */}
       <div className="p-4">
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <div className="text-sm font-medium">Network status</div>
+          <div className="text-sm font-medium">Estado de red</div>
           <div className="mt-2 flex items-center gap-2 text-sm text-slate-600">
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-            Stellar Testnet online
+            Stellar Testnet activa
           </div>
         </div>
       </div>

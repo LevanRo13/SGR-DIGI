@@ -5,11 +5,11 @@ export interface KPI {
 }
 
 export type ProcessState =
-  | 'Document Uploaded'
-  | 'AI Processing'
-  | 'Human Validation'
-  | 'Registered On-Chain'
-  | 'Certificate Issued';
+  | 'Documento Cargado'
+  | 'Procesamiento IA'
+  | 'Validación Humana'
+  | 'Registrado On-Chain'
+  | 'Certificado Emitido';
 
 export interface Process {
   id: string;
