@@ -20,6 +20,7 @@ export const NAVIGATION_ITEMS = [
   'New Guarantee',
   'Processes',
   'Certificates',
+  'Marketplace',
   'Blockchain Explorer',
   'Companies',
   'Settings',
