@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["guarantee-token", "marketplace"]
+members = ["guarantee-token", "marketplace", "commodity-oracle"]
 
 [profile.release]
 opt-level = "z"
