@@ -98,9 +98,41 @@ export default function UploadPage() {
     if (inputRef.current) inputRef.current.value = '';
   }, []);
 
-  const handleContinue = () => {
-    console.log('Continuar con archivo:', file?.name);
-    // TODO: Enviar archivo al backend para extracción IA (HU-02)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleContinue = async () => {
+    if (!file) return;
+    
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      // Mocked data for E2E testing matching the Backend DTO
+      const payload = {
+        tipo: "PAGARE",       // Must be: FACTURA, WARRANT, PAGARE, CHEQUE, OTRO
+        cantidad: 1,          // number
+        valor: 500000,        // number
+        aval: 500000,         // number
+        operatorConfirmed: true,
+      };
+
+      const res = await fetch('http://localhost:3000/guarantee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert(`Garantía creada exitosamente!\nID Interno: ${data.data.id}\nTx Hash: ${data.data.txHash}`);
+        handleRemoveFile(); // reset form
+      } else {
+        setError(data.error || 'Error al crear la garantía');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error de conexión');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isReady = file !== null;
