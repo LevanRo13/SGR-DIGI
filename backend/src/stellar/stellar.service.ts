@@ -63,17 +63,22 @@ export class StellarService implements OnModuleInit {
     this.marketplaceContractId =
       this.configService.get<string>('MARKETPLACE_CONTRACT_ID') || '';
 
-    if (!this.guaranteeTokenContractId || !this.marketplaceContractId) {
-      this.logger.warn(
-        'Contract IDs not configured. Please deploy contracts and update .env',
-      );
-    } else {
+    if (this.guaranteeTokenContractId) {
       this.guaranteeTokenContract = new StellarSdk.Contract(
         this.guaranteeTokenContractId,
       );
+      this.logger.log(`GuaranteeToken contract configured: ${this.guaranteeTokenContractId}`);
+    } else {
+      this.logger.warn('GUARANTEE_TOKEN_CONTRACT_ID not configured.');
+    }
+
+    if (this.marketplaceContractId) {
       this.marketplaceContract = new StellarSdk.Contract(
         this.marketplaceContractId,
       );
+      this.logger.log(`Marketplace contract configured: ${this.marketplaceContractId}`);
+    } else {
+      this.logger.warn('MARKETPLACE_CONTRACT_ID not configured.');
     }
 
     const secretKey = this.configService.get<string>('STELLAR_SECRET_KEY');

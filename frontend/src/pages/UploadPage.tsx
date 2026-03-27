@@ -119,7 +119,7 @@ export default function UploadPage() {
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await fetch('http://localhost:8000/api/extract', {
+      const response = await fetch('http://localhost:3000/extract/upload', {
         method: 'POST',
         body: formData,
       });
@@ -143,91 +143,89 @@ export default function UploadPage() {
     }
   };
 
-  // Mock data - En producción, estos datos vendrían de las HU anteriores (HU-02 a HU-05)
-  const getMockGuaranteeData = (): GuaranteeData => {
+  // Construir datos de garantía a partir de los datos extraídos
+  const getGuaranteeData = (): GuaranteeData => {
+    const tipo = String(extractedData?.tipo || extractedData?.type || 'OTRO');
+    const valor = Number(extractedData?.valor || extractedData?.value || extractedData?.amount || 0);
+    const cantidad = Number(extractedData?.cantidad || extractedData?.quantity || 1);
+
+    const baseValue = valor || 100000;
+    const riskFactor = tipo === 'WARRANT' ? 0.8 : tipo === 'PAGARE' ? 1.2 : 1.0;
+    const multiplier = 1.5;
+    const finalAval = Math.round(baseValue * riskFactor * multiplier);
+
     return {
       company: {
-        businessName: 'PyME Example SRL',
-        cuit: '30-12345678-9',
-        activity: 'Comercio Minorista',
+        businessName: String(extractedData?.empresa || extractedData?.company || 'Sin datos'),
+        cuit: String(extractedData?.cuit || extractedData?.dni || 'Sin datos'),
+        activity: String(extractedData?.actividad || extractedData?.activity || ''),
       },
       document: {
-        type: 'Factura',
-        number: 'FC-0001-00012345',
+        type: tipo,
+        number: String(extractedData?.numero || extractedData?.number || file?.name || ''),
         date: new Date().toLocaleDateString('es-AR'),
-        amount: 100000,
-        issuer: 'Proveedor XYZ SA',
+        amount: valor,
+        issuer: String(extractedData?.emisor || extractedData?.issuer || ''),
       },
       calculation: {
-        baseValue: 100000,
-        riskFactor: 1.0,
-        multiplier: 1.5,
-        finalAval: 150000, // 1.5 x 100000 x 1.0
+        baseValue,
+        riskFactor,
+        multiplier,
+        finalAval,
       },
       blockchain: {
         network: 'Stellar Testnet',
-        hash: '7a8f9b2e4d6c1f3e8a9b2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f',
+        hash: 'Pendiente — se genera al confirmar emisión',
       },
       uploadedFile: file || undefined,
     };
   };
 
-  // Función que simula el envío a blockchain - En producción, llamaría al backend
+  // Emitir garantía en Stellar llamando al backend real
   const handleConfirmEmission = async (
     data: GuaranteeData
   ): Promise<EmissionResult> => {
-    // Simular delay de red (1.5 segundos)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    // TODO: Aquí iría la llamada real al backend para emitir en Stellar
-    // Ejemplo: const response = await fetch('/api/guarantee/emit', { method: 'POST', body: JSON.stringify(data) })
-
-    // Simulación de respuesta exitosa
-    return {
-      success: true,
-      transactionId: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6',
-      explorerUrl: 'https://stellar.expert/explorer/testnet/tx/a1b2c3d4e5f6',
-    };
-
-    // Simulación de error (descomentar para probar):
-    // return {
-    //   success: false,
-    //   error: 'Error al conectar con Stellar Horizon API',
-    // };
-  };
-
-  const handleDataCorrectionSubmit = async (correctedData: ExtractedData) => {
-    setIsProcessing(true);
-    setProcessingError(null);
-
     try {
-      // TODO: Enviar datos corregidos al backend
-      const response = await fetch('http://localhost:8000/api/process-guarantee', {
+      const response = await fetch('http://localhost:3000/guarantee', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          file_name: file?.name,
-          extracted_data: correctedData,
+          tipo: data.document.type.toUpperCase(),
+          cantidad: data.document.amount > 0 ? data.document.amount : 1,
+          valor: data.document.amount,
+          aval: data.calculation.finalAval,
+          operatorConfirmed: true,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Backend error: ${response.statusText}`);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        return {
+          success: false,
+          error: result.error || result.message || 'Error al emitir la garantía en Stellar',
+        };
       }
 
-      console.log('Datos guardados correctamente:', correctedData);
-      // TODO: Redirigir a la siguiente página o mostrar éxito
-      // Por ahora, limpiar el formulario
-      setFile(null);
-      setExtractedData(null);
+      return {
+        success: true,
+        transactionId: result.data.txHash,
+        explorerUrl: result.data.explorerUrl,
+      };
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Error al guardar los datos';
-      setProcessingError(message);
-    } finally {
-      setIsProcessing(false);
+      return {
+        success: false,
+        error: err instanceof Error ? err.message : 'Error de conexión con el backend',
+      };
     }
+  };
+
+  const handleDataCorrectionSubmit = async (correctedData: ExtractedData) => {
+    // Guardar los datos corregidos y abrir el modal de confirmación de emisión
+    setExtractedData(correctedData);
+    setShowConfirmationModal(true);
   };
 
   const handleCancelCorrection = () => {
@@ -241,7 +239,7 @@ export default function UploadPage() {
       <EmissionConfirmationModal
         isOpen={showConfirmationModal}
         onClose={() => setShowConfirmationModal(false)}
-        data={getMockGuaranteeData()}
+        data={getGuaranteeData()}
         onConfirm={handleConfirmEmission}
       />
 

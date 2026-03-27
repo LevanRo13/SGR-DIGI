@@ -21,6 +21,7 @@ export const NAVIGATION_ITEMS = [
   'Processes',
   'Certificates',
   'Marketplace',
+  'Blend Protocol',
   'Blockchain Explorer',
   'Companies',
   'Settings',

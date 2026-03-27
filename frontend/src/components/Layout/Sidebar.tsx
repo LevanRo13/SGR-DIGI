@@ -7,6 +7,7 @@ const ROUTE_MAP: Record<string, string> = {
   'Processes': '/processes',
   'Certificates': '/certificates',
   'Marketplace': '/marketplace',
+  'Blend Protocol': '/lending',
   'Blockchain Explorer': '/explorer',
   'Companies': '/companies',
   'Settings': '/settings',

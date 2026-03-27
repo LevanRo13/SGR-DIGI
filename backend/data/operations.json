@@ -158,5 +158,19 @@
     "network": "Stellar Testnet (Soroban)",
     "txHash": "a2e0fa7c60ffd35426ce4da6b3bca8ea0cb4bf38864df632195f683fc35cb31c",
     "explorerUrl": "https://stellar.expert/explorer/testnet/tx/a2e0fa7c60ffd35426ce4da6b3bca8ea0cb4bf38864df632195f683fc35cb31c"
+  },
+  {
+    "id": "OP-20260327-011",
+    "tipo": "OTRO",
+    "cantidad": 1,
+    "valor": 0,
+    "aval": 150000,
+    "estado": "confirmed",
+    "timestamp": "2026-03-27T05:04:56.879Z",
+    "guaranteeId": 1774587896879,
+    "memoText": "GUARANTEE-1774587896879",
+    "network": "Stellar Testnet (Soroban)",
+    "txHash": "3bf672a94fe784fc6cc273a71b6af6452e344e32494399fe94a9fd449c4b3926",
+    "explorerUrl": "https://stellar.expert/explorer/testnet/tx/3bf672a94fe784fc6cc273a71b6af6452e344e32494399fe94a9fd449c4b3926"
   }
 ]
