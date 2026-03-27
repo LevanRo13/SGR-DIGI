@@ -9,7 +9,8 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import Layout from '../components/Layout';
-import DataCorrectionForm, { ExtractedData } from '../components/DataCorrectionForm';
+import DataCorrectionForm from '../components/DataCorrectionForm';
+import type { ExtractedData } from '../components/DataCorrectionForm';
 import EmissionConfirmationModal from '../components/EmissionConfirmationModal';
 import type { GuaranteeData, EmissionResult } from '../types/guarantee';
 
