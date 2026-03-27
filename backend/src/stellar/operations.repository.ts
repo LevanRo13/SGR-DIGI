@@ -12,6 +12,7 @@ export interface Operation {
   aval: number;
   estado: OperationStatus;
   timestamp: string;
+  guaranteeId?: number;
   txHash?: string;
   explorerUrl?: string;
   memoText?: string;

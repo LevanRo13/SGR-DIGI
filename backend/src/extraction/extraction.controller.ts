@@ -24,9 +24,7 @@ export class ExtractionController {
    * Recibe texto libre de un documento y devuelve datos estructurados.
    */
   @Post()
-  async extractFromText(
-    @Body() body: ExtractDto,
-  ): Promise<ExtractionResponse> {
+  async extractFromText(@Body() body: ExtractDto): Promise<ExtractionResponse> {
     if (!body.texto || body.texto.trim().length === 0) {
       return {
         success: false,
@@ -57,9 +55,7 @@ export class ExtractionController {
    * IDs válidos: DOC-001, DOC-002, DOC-003
    */
   @Get('mock/:id')
-  async extractFromMock(
-    @Param('id') id: string,
-  ): Promise<ExtractionResponse> {
+  async extractFromMock(@Param('id') id: string): Promise<ExtractionResponse> {
     const doc = (dataset as any[]).find((d) => d.id === id);
 
     if (!doc) {

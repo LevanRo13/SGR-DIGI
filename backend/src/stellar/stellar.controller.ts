@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { StellarService } from './stellar.service';
 import { CreateGuaranteeDto } from './dto/create-guarantee.dto';
+import { CreateOfferDto } from './dto/create-offer.dto';
+import { BuyTokensDto } from './dto/buy-tokens.dto';
 
 @Controller()
 export class StellarController {
@@ -68,6 +70,7 @@ export class StellarController {
       success: true,
       data: operations.map((op) => ({
         id: op.id,
+        guaranteeId: op.guaranteeId,
         tipo: op.tipo,
         estado: op.estado,
         txHash: op.txHash,
@@ -132,6 +135,77 @@ export class StellarController {
         success: false,
         error: (error as Error).message,
       });
+    }
+  }
+
+  /**
+   * Marketplace endpoints
+   */
+
+  @Post('marketplace/offer')
+  @HttpCode(HttpStatus.CREATED)
+  async createOffer(@Body() dto: CreateOfferDto) {
+    try {
+      const result = await this.stellarService.createOffer(
+        dto.guaranteeId,
+        dto.amount,
+        dto.pricePerToken,
+      );
+      return {
+        success: true,
+        data: {
+          offerId: result.offerId,
+          txHash: result.txHash,
+          explorerUrl: `https://stellar.expert/explorer/testnet/tx/${result.txHash}`,
+        },
+      };
+    } catch (error: any) {
+      // Removing fs write or complex error mapping. Simply serialize the exception!
+      return {
+        success: false,
+        error: error.message ? error.message : String(error)
+      };
+    }
+  }
+
+  @Get('marketplace/offers/:guaranteeId')
+  async getOffers(@Param('guaranteeId') guaranteeId: string) {
+    try {
+      const offers = await this.stellarService.getOffers(
+        parseInt(guaranteeId, 10),
+      );
+      return {
+        success: true,
+        data: offers,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message ? error.message : String(error)
+      };
+    }
+  }
+
+  @Post('marketplace/buy')
+  @HttpCode(HttpStatus.OK)
+  async buyTokens(@Body() dto: BuyTokensDto) {
+    try {
+      const result = await this.stellarService.buyTokens(
+        dto.offerId,
+        dto.amount,
+      );
+      return {
+        success: true,
+        data: {
+          txHash: result.txHash,
+          explorerUrl: `https://stellar.expert/explorer/testnet/tx/${result.txHash}`,
+        },
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message ? error.message : String(error)
+      };
     }
   }
 }
