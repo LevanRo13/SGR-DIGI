@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import Layout from '../components/Layout';
 import DataCorrectionForm, { ExtractedData } from '../components/DataCorrectionForm';
+import EmissionConfirmationModal from '../components/EmissionConfirmationModal';
+import type { GuaranteeData, EmissionResult } from '../types/guarantee';
 
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
 
@@ -33,6 +35,7 @@ export default function UploadPage() {
   const [extractedData, setExtractedData] = useState<ExtractedData | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingError, setProcessingError] = useState<string | null>(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const validateAndSetFile = useCallback((incoming: File) => {
@@ -139,6 +142,59 @@ export default function UploadPage() {
     }
   };
 
+  // Mock data - En producción, estos datos vendrían de las HU anteriores (HU-02 a HU-05)
+  const getMockGuaranteeData = (): GuaranteeData => {
+    return {
+      company: {
+        businessName: 'PyME Example SRL',
+        cuit: '30-12345678-9',
+        activity: 'Comercio Minorista',
+      },
+      document: {
+        type: 'Factura',
+        number: 'FC-0001-00012345',
+        date: new Date().toLocaleDateString('es-AR'),
+        amount: 100000,
+        issuer: 'Proveedor XYZ SA',
+      },
+      calculation: {
+        baseValue: 100000,
+        riskFactor: 1.0,
+        multiplier: 1.5,
+        finalAval: 150000, // 1.5 x 100000 x 1.0
+      },
+      blockchain: {
+        network: 'Stellar Testnet',
+        hash: '7a8f9b2e4d6c1f3e8a9b2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f',
+      },
+      uploadedFile: file || undefined,
+    };
+  };
+
+  // Función que simula el envío a blockchain - En producción, llamaría al backend
+  const handleConfirmEmission = async (
+    data: GuaranteeData
+  ): Promise<EmissionResult> => {
+    // Simular delay de red (1.5 segundos)
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // TODO: Aquí iría la llamada real al backend para emitir en Stellar
+    // Ejemplo: const response = await fetch('/api/guarantee/emit', { method: 'POST', body: JSON.stringify(data) })
+
+    // Simulación de respuesta exitosa
+    return {
+      success: true,
+      transactionId: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6',
+      explorerUrl: 'https://stellar.expert/explorer/testnet/tx/a1b2c3d4e5f6',
+    };
+
+    // Simulación de error (descomentar para probar):
+    // return {
+    //   success: false,
+    //   error: 'Error al conectar con Stellar Horizon API',
+    // };
+  };
+
   const handleDataCorrectionSubmit = async (correctedData: ExtractedData) => {
     setIsProcessing(true);
     setProcessingError(null);
@@ -180,6 +236,14 @@ export default function UploadPage() {
 
   return (
     <Layout>
+      {/* Modal de confirmación (HU-06) */}
+      <EmissionConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={() => setShowConfirmationModal(false)}
+        data={getMockGuaranteeData()}
+        onConfirm={handleConfirmEmission}
+      />
+
       <div className="max-w-2xl">
         {/* Si hay datos extraídos, mostrar el formulario de corrección en lugar del upload */}
         {extractedData ? (
